@@ -43,9 +43,9 @@ The image has been tested with Docker __1.7__ && __1.9__.
 RestComm-Graylog-Docker container provides the following flags that can be set to the RUN command.
 
 * __SECURESSL__ Use Authorised certificate JKS file, If not set a self-signed certificate will be generated. 
-*___CERTCONFURL___ URL to download jks file, for HTTSP - obligatory if ```SECURESSL``` set.
-*___TRUSTSTORE_PASSWORDL___ Password for the authorized jks file - obligatory if ```SECURESSL``` set.
-*___TRUSTSTORE_ALIAS___ Alias for the authorized jks file - obligatory if ```SECURESSL``` set.
+     *__CERTCONFURL__ URL to download jks file, for HTTSP - obligatory if ```SECURESSL``` set.
+     *__TRUSTSTORE_PASSWORDL__ Password for the authorized jks file - obligatory if ```SECURESSL``` set.
+     *__TRUSTSTORE_ALIAS__ Alias for the authorized jks file - obligatory if ```SECURESSL``` set.
 
 
 ### Persist data using host filesystem
