@@ -1,0 +1,676 @@
+{
+  "id" : null,
+  "name" : "Template Content Pack",
+  "description" : "This content pack can be used as a template for monitoring and alerting any new EC2 RestComm instance",
+  "category" : "Template for new RestComm server.",
+  "inputs" : [ {
+    "title" : "SipApplicationDispatcherMetrics - AddServerName",
+    "configuration" : {
+      "configURL" : "http://AddSeverIP:9990/management/subsystem/sip?json.pretty&include-runtime=true",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "PASSWDIFNEED",
+      "configInterval" : 10,
+      "configUsername" : "UserNAme",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "Step1",
+      "type" : "JSON",
+      "configuration" : {
+        "flatten" : false,
+        "key_separator" : ".",
+        "list_separator" : ", ",
+        "kv_separator" : "="
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "full_message",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "CPU usage - AddServerName",
+    "configuration" : {
+      "configURL" : "https://HostName/jolokia?p=/read/java.lang:type=OperatingSystem/ProcessCpuLoad",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "",
+      "configInterval" : 10,
+      "configUsername" : "",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "CpuIntermedioC",
+      "type" : "SPLIT_AND_INDEX",
+      "configuration" : {
+        "index" : 6,
+        "split_by" : ","
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "PassToRegC",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    }, {
+      "title" : "CPU usage - AddServerName",
+      "type" : "REGEX",
+      "configuration" : {
+        "regex_value" : "(\\d\\.\\d*)"
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "CpuUse",
+      "source_field" : "PassToRegC",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "RestcommMetrics -AddServerName",
+    "configuration" : {
+      "configURL" : "https://HostName/restcomm/2012-04-24/Accounts/ACae6e420f425248d6a26948c17a9e2acf/Supervisor.json/metrics",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "PASSWDIFNEED",
+      "configInterval" : 10,
+      "configUsername" : "UserNAme",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "RestcommMetrics -AddServerName",
+      "type" : "REGEX",
+      "configuration" : {
+        "regex_value" : "(\\s\\{.*?\\})"
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "COPY",
+      "target_field" : "MetricsCloud",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    }, {
+      "title" : "Metrics - AddServerName",
+      "type" : "JSON",
+      "configuration" : {
+        "flatten" : false,
+        "key_separator" : ".",
+        "list_separator" : ", ",
+        "kv_separator" : "="
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "MetricsCloud",
+      "source_field" : "MetricsCloud",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "RestcommSipSubsystem - AddServerName",
+    "configuration" : {
+      "configURL" : "http://AddSeverIP:9990/management/deployment/restcomm.war/subsystem/sip?include-runtime=true&json.pretty",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "PASSWDIFNEED",
+      "configInterval" : 10,
+      "configUsername" : "USERNAME",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "Step1",
+      "type" : "JSON",
+      "configuration" : {
+        "flatten" : false,
+        "key_separator" : ".",
+        "list_separator" : ", ",
+        "kv_separator" : "="
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "full_message",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "Request Status - AddServerName",
+    "configuration" : {
+      "headers" : "",
+      "path" : "$.status",
+      "target_url" : "https://HostName/jolokia",
+      "override_source" : "",
+      "interval" : 2,
+      "source" : "Jolokia",
+      "timeunit" : "SECONDS"
+    },
+    "type" : "org.graylog2.inputs.misc.jsonpath.JsonPathInput",
+    "global" : false,
+    "extractors" : [ ],
+    "static_fields" : {
+      "Label" : "RESTCOMMNODELABEL"
+    }
+  }, {
+    "title" : "Raas Build Version - AddServerName    ",
+    "configuration" : {
+      "configURL" : "https://HostName/restcomm/2012-04-24/Accounts/ACae6e420f425248d6a26948c17a9e2acf/Supervisor.json/metrics",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "PASSWDIFNEED",
+      "configInterval" : 10,
+      "configUsername" : "USERNAME",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "RaasVersionBuild",
+      "type" : "REGEX",
+      "configuration" : {
+        "regex_value" : "(\\\"Version\\\"\\:\\s\\\".*?\\\")"
+      },
+      "converters" : [ {
+        "type" : "TOKENIZER",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "COPY",
+      "target_field" : "RaasVersionBuild",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "PlatformJVMMetrics - AddServerName",
+    "configuration" : {
+      "configURL" : "http://AddSeverIP:9990/management/core-service/platform-mbean?operation=resource&type=runtime&recursive&json.pretty",
+      "configLabel" : "RESTCOMMNODELABEL",
+      "configHeadersToRecord" : "",
+      "configPassword" : "PASSWDIFNEED",
+      "configInterval" : 10,
+      "configUsername" : "USERNAME",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "Step1",
+      "type" : "JSON",
+      "configuration" : {
+        "flatten" : false,
+        "key_separator" : ".",
+        "list_separator" : ", ",
+        "kv_separator" : "="
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "full_message",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  }, {
+    "title" : "Heap - AddServerName",
+    "configuration" : {
+      "headers" : "",
+      "path" : "$.value",
+      "target_url" : "https://HostName/jolokia?p=/read/java.lang:type=Memory/HeapMemoryUsage",
+      "override_source" : "MaxHeap",
+      "interval" : 10,
+      "source" : "Jolokia",
+      "timeunit" : "SECONDS"
+    },
+    "type" : "org.graylog2.inputs.misc.jsonpath.JsonPathInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "HeapMaxCloudBytesReg",
+      "type" : "REGEX",
+      "configuration" : {
+        "regex_value" : "(max\\=\\d*)"
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "HeapMaxCloudBytes",
+      "source_field" : "result",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    }, {
+      "title" : "CloudMaxHeapBts02",
+      "type" : "SPLIT_AND_INDEX",
+      "configuration" : {
+        "index" : 2,
+        "split_by" : "="
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "CloudMaxHeapBts",
+      "source_field" : "HeapMaxCloudBytes",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    }, {
+      "title" : "UsedHeapCloudBytesReg",
+      "type" : "REGEX",
+      "configuration" : {
+        "regex_value" : "(used\\=\\d*)"
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "UsedHeapCloudBytes",
+      "source_field" : "result",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    }, {
+      "title" : "UsedHeapCloudBts02",
+      "type" : "SPLIT_AND_INDEX",
+      "configuration" : {
+        "index" : 2,
+        "split_by" : "="
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "CUT",
+      "target_field" : "UsedHeapCloudBts",
+      "source_field" : "UsedHeapCloudBytes",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : {
+      "Label" : "RESTCOMMNODELABEL"
+    }
+  } ],
+  "streams" : [ ],
+  "outputs" : [ ],
+  "dashboards" : [ {
+    "title" : "Monitor - RestComm  AddServerName",
+    "description" : "Dashboard for AddServerName",
+    "dashboard_widgets" : [ {
+      "description" : "Threads - AddServerName",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 3000
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "cardinal",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "type.threading.daemon-thread-count",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "type.threading.thread-count",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 9,
+      "cache_time" : 10
+    }, {
+      "description" : "SIP Active Sessions",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 600
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "active-sip-sessions",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "active-sip-application-sessions",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 3,
+      "row" : 5,
+      "cache_time" : 10
+    }, {
+      "description" : "SIP Created/Expired",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 600
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "expired-sip-application-sessions",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "sip-application-sessions-created",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "sip-sessions-created",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "expired-sip-sessions",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 3,
+      "row" : 6,
+      "cache_time" : 10
+    }, {
+      "description" : "Call Metrics",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 2000
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "BusyCalls",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "CanceledCalls",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "FailedCalls",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "NotFoundCalls",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "NoAnswerCalls",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "Outgoing/Incoming/Total Calls since Uptime",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 2400
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "OutgoingCallsSinceUptime",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "IncomingCallsSinceUptime",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TotalCallsSinceUptime",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 4,
+      "cache_time" : 10
+    }, {
+      "description" : "Text Messages Metrics",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 2400
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TextMessageInboundToApp",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TextMessageOutbound",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TextMessageNotFound",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TextMessageInboundToProxyOut",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "TextMessageInboundToClient",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 3,
+      "row" : 3,
+      "cache_time" : 10
+    }, {
+      "description" : "Live Incoming/Outgoing Calls",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 1000
+        },
+        "interval" : "minute",
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "LiveIncomingCalls",
+          "statistical_function" : "max"
+        }, {
+          "query" : "RESTCOMMNODELABEL",
+          "field" : "LiveOutgoingCalls",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 1,
+      "cache_time" : 10
+    }, {
+      "description" : "Raas Version Build",
+      "type" : "QUICKVALUES",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 30
+        },
+        "field" : "RaasVersionBuild",
+        "show_pie_chart" : false,
+        "query" : "RESTCOMMNODELABEL",
+        "show_data_table" : true
+      },
+      "col" : 3,
+      "row" : 9,
+      "cache_time" : 10
+    }, {
+      "description" : "Heap Used - RestComm  AddServerName",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "CloudMaxHeapBts",
+          "statistical_function" : "max"
+        }, {
+          "query" : "*",
+          "field" : "UsedHeapCloudBts",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 8,
+      "cache_time" : 10
+    }, {
+      "description" : "Completed Calls",
+      "type" : "STATS_COUNT",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 10
+        },
+        "field" : "CompletedCalls",
+        "trend" : false,
+        "query" : "RESTCOMMNODELABEL",
+        "stats_function" : "max",
+        "lower_is_better" : false
+      },
+      "col" : 3,
+      "row" : 1,
+      "cache_time" : 10
+    }, {
+      "description" : "Registered Users ",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "max",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 2400
+        },
+        "renderer" : "bar",
+        "interpolation" : "linear",
+        "field" : "RegisteredUsers",
+        "query" : "RESTCOMMNODELABEL",
+        "interval" : "minute"
+      },
+      "col" : 3,
+      "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "CPU Usage - RestComm  AddServerName",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "max",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "field" : "CpuUse",
+        "query" : "RESTCOMMNODELABEL",
+        "interval" : "minute"
+      },
+      "col" : 1,
+      "row" : 6,
+      "cache_time" : 10
+    } ]
+  } ],
+  "grok_patterns" : [ ]
+}
