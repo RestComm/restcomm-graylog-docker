@@ -33,7 +33,10 @@ The image has been tested with Docker __1.7__ && __1.9__.
 
 ### Supported Tags
 
-* __latest:__ Using this tag you will get the latest RestComm-Graylog build. __restcomm/restcomm-graylog__
+* __latest:__ Using this tag you will get the latest RestComm-Graylog build. __restcomm/restcomm/graylog-restcomm__
+
+
+*To pull the image please use: docker pull restcomm/graylog-restcomm:latest
 
 ### Environment variables 
 
