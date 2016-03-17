@@ -32,7 +32,7 @@ if [ ! -z "\$GRAYLOG_ENFORCE_SSL" ]; then
 fi
 EOM
 
-sed -i "s/^default\['graylog'\]\['graylog-server'\]\['content_packs_auto_load'\]\s\=\s\"grok-patterns.json,content_pack_appliance.json\"$/default['graylog']['graylog-server']['content_packs_auto_load'] \= \"grok-patterns.json,Template_ContentPack.json\"/" \
+sed -i "s/^default\['graylog'\]\['graylog-server'\]\['content_packs_auto_load'\]\s\=\s\"grok-patterns.json,content_pack_appliance.json\"$/default['graylog']['graylog-server']['content_packs_auto_load'] \= \"grok-patterns.json,Template_ContentPack.json,LoadBalancer_ContentPack.json\"/" \
 /opt/graylog/embedded/cookbooks/graylog/attributes/default.rb
 
 sudo chmod 777 /opt/graylog/plugin/graylog2-plugin-input-httpmonitor*.jar

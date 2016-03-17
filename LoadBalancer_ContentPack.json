@@ -1,0 +1,250 @@
+{
+  "id" : null,
+  "name" : "Load Balancer Content Pack",
+  "description" : "This content pack can be used for monitoring Load Balancer",
+  "category" : "load balancer",
+  "inputs" : [ {
+    "title" : "Load Balancer Stats",
+    "configuration" : {
+      "configURL" : "http://AddSeverIP:2006/lbstat",
+      "configLabel" : "Load Balancer Stats",
+      "configHeadersToRecord" : "",
+      "configPassword" : "",
+      "configInterval" : 10,
+      "configUsername" : "",
+      "configHttpProxy" : "",
+      "configTimeout" : 20,
+      "configLogResponseBody" : true,
+      "configMethod" : "GET",
+      "configRequestBody" : "",
+      "configTimeoutUnit" : "SECONDS",
+      "configHeadersToSend" : "",
+      "override_source" : "",
+      "configIntervalUnit" : "SECONDS"
+    },
+    "type" : "org.graylog2.plugin.httpmonitor.HttpMonitorInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "Load Balancer Stats JSON",
+      "type" : "JSON",
+      "configuration" : {
+        "flatten" : false,
+        "key_separator" : ".",
+        "list_separator" : ", ",
+        "kv_separator" : "="
+      },
+      "converters" : [ ],
+      "order" : 0,
+      "cursor_strategy" : "COPY",
+      "target_field" : "full_message",
+      "source_field" : "full_message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  } ],
+  "streams" : [ ],
+  "outputs" : [ ],
+  "dashboards" : [ {
+    "title" : "Load balancer dashboard",
+    "description" : "Load balancer dashboard",
+    "dashboard_widgets" : [ {
+      "description" : "JVM CPU usage",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "mean",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "field" : "Metrics.JvmCpuUsage",
+        "query" : "*",
+        "interval" : "minute"
+      },
+      "col" : 1,
+      "row" : 1,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of HTTP requests",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "mean",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "field" : "Metrics.NumberOfHttpRequests",
+        "query" : "*",
+        "interval" : "minute"
+      },
+      "col" : 1,
+      "row" : 3,
+      "cache_time" : 10
+    }, {
+      "description" : "JVM heap size",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "mean",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "field" : "Metrics.JvmHeapSize",
+        "query" : "*",
+        "interval" : "minute"
+      },
+      "col" : 3,
+      "row" : 1,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of HTTP bytes transferred to server/client",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "Metrics.NumberOfHttpBytesToClient",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfHttpBytesToServer",
+          "statistical_function" : "mean"
+        } ]
+      },
+      "col" : 1,
+      "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of active connections SIP/HTTP/SMPP",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "Metrics.NumberOfActiveSipConnections",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfActiveSmppConnections",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfActiveHttpConnections",
+          "statistical_function" : "mean"
+        } ]
+      },
+      "col" : 3,
+      "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of processed SIP requests/responses",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "Metrics.NumberOfRequestsProcessed",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfResponsesProcessed",
+          "statistical_function" : "mean"
+        } ]
+      },
+      "col" : 3,
+      "row" : 3,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of SMPP bytes transferred to server/client",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "Metrics.NumberOfSmppBytesToClient",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfSmppBytesToServer",
+          "statistical_function" : "mean"
+        } ]
+      },
+      "col" : 1,
+      "row" : 4,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of transferred SIP bytes",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "mean",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "field" : "Metrics.NumberOfBytesTransferred",
+        "query" : "*",
+        "interval" : "minute"
+      },
+      "col" : 3,
+      "row" : 4,
+      "cache_time" : 10
+    }, {
+      "description" : "Number of SMPP requests to server/client",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 300
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "*",
+          "field" : "Metrics.NumberOfSmppRequestsToClient",
+          "statistical_function" : "mean"
+        }, {
+          "query" : "*",
+          "field" : "Metrics.NumberOfSmppRequestsToServer",
+          "statistical_function" : "mean"
+        } ]
+      },
+      "col" : 1,
+      "row" : 5,
+      "cache_time" : 10
+    } ]
+  } ],
+  "grok_patterns" : [ ]
+}

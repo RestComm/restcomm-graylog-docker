@@ -6,6 +6,7 @@ COPY ./ConfigureGraylog.sh /etc/my_init.d/configureGraylog.sh
 RUN chmod +x /etc/my_init.d/configureGraylog.sh
 
 COPY ./Template_ContentPack.json /opt/graylog/contentpacks/
+COPY ./LoadBalancer_ContentPack.json /opt/graylog/contentpacks/
 
 ADD https://github.com/sivasamyk/graylog2-plugin-input-httpmonitor/releases/download/v1.0.2/graylog2-plugin-input-httpmonitor-1.0.2.jar opt/graylog/plugin/
 
