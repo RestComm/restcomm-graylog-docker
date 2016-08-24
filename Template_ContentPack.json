@@ -96,6 +96,24 @@
     } ],
     "static_fields" : { }
   }, {
+    "title" : "HOST-RAM",
+    "configuration" : {
+      "max_chunk_size" : 65536,
+      "recv_buffer_size" : 1048576,
+      "port" : 6666,
+      "tls_key_password" : "",
+      "tls_key_file" : "",
+      "tls_client_auth_cert_file" : "",
+      "tls_client_auth" : "disabled",
+      "override_source" : "",
+      "bind_address" : "0.0.0.0",
+      "tls_cert_file" : ""
+    },
+    "type" : "org.graylog2.inputs.gelf.http.GELFHttpInput",
+    "global" : false,
+    "extractors" : [ ],
+    "static_fields" : { }
+  },{
     "title" : "RestcommMetrics -AddServerName",
     "configuration" : {
       "configURL" : "https://HostName/restcomm/2012-04-24/Accounts/ACae6e420f425248d6a26948c17a9e2acf/Supervisor.json/metrics",
@@ -190,7 +208,7 @@
     } ],
     "static_fields" : { }
   }, {
-    "title" : "Request Status - AddServerName",
+    "title" : "jboss Status - AddServerName",
     "configuration" : {
       "headers" : "",
       "path" : "$.status",
@@ -285,6 +303,59 @@
     } ],
     "static_fields" : { }
   }, {
+    "title" : "MediaServer-  JVM",
+    "configuration" : {
+      "max_chunk_size" : 65536,
+      "recv_buffer_size" : 1048576,
+      "port" : 7777,
+      "tls_key_password" : "",
+      "tls_key_file" : "",
+      "tls_client_auth_cert_file" : "",
+      "tls_client_auth" : "disabled",
+      "override_source" : "",
+      "bind_address" : "0.0.0.0",
+      "tls_cert_file" : ""
+    },
+    "type" : "org.graylog2.inputs.gelf.http.GELFHttpInput",
+    "global" : false,
+    "extractors" : [ ],
+    "static_fields" : { }
+  }, {
+    "title" : "Hard Disk - All RestComm Instances",
+    "configuration" : {
+      "max_chunk_size" : 65536,
+      "recv_buffer_size" : 1048576,
+      "port" : 5555,
+      "tls_key_password" : "",
+      "tls_key_file" : "",
+      "tls_client_auth_cert_file" : "",
+      "tls_client_auth" : "disabled",
+      "override_source" : "",
+      "bind_address" : "0.0.0.0",
+      "tls_cert_file" : ""
+    },
+    "type" : "org.graylog2.inputs.gelf.http.GELFHttpInput",
+    "global" : false,
+    "extractors" : [ {
+      "title" : "HDusage",
+      "type" : "SPLIT_AND_INDEX",
+      "configuration" : {
+        "index" : 1,
+        "split_by" : "%"
+      },
+      "converters" : [ {
+        "type" : "NUMERIC",
+        "configuration" : { }
+      } ],
+      "order" : 0,
+      "cursor_strategy" : "COPY",
+      "target_field" : "HDusage",
+      "source_field" : "message",
+      "condition_type" : "NONE",
+      "condition_value" : ""
+    } ],
+    "static_fields" : { }
+  },{
     "title" : "Heap - AddServerName",
     "configuration" : {
       "headers" : "",
@@ -651,6 +722,120 @@
       },
       "col" : 3,
       "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "HD use (%).",
+      "type" : "FIELD_CHART",
+      "configuration" : {
+        "valuetype" : "max",
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "renderer" : "line",
+        "interpolation" : "step-after",
+        "field" : "HDusage",
+        "query" : "source:RESTCOMMSOURCE",
+        "interval" : "hour"
+      },
+      "col" : 1,
+      "row" : 11,
+      "cache_time" : 10
+    }, {
+      "description" : "MediaServer - Stats (%) ",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "CPU",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "GC",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 2,
+      "cache_time" : 10
+    }, {
+      "description" : "MediaServer - JVM (Mem.)",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "interval" : "minute",
+        "renderer" : "line",
+        "interpolation" : "linear",
+        "series" : [ {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "HPCUR",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "NHMAX",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "NHCUR",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "HPMAX",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 1,
+      "cache_time" : 10
+    }, {
+      "description" : "Host RAM",
+      "type" : "STACKED_CHART",
+      "configuration" : {
+        "timerange" : {
+          "type" : "relative",
+          "range" : 28800
+        },
+        "interval" : "hour",
+        "renderer" : "line",
+        "interpolation" : "step-after",
+        "series" : [ {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "MemTotal",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "Cache",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "MemFree",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "SwapFree",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "SwapTotal",
+          "statistical_function" : "max"
+        }, {
+          "query" : "source:RESTCOMMSOURCE",
+          "field" : "Buffers",
+          "statistical_function" : "max"
+        } ]
+      },
+      "col" : 1,
+      "row" : 7,
       "cache_time" : 10
     }, {
       "description" : "CPU Usage - RestComm  AddServerName",
