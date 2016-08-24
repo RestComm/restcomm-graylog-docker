@@ -10,7 +10,7 @@ COPY ./LoadBalancer_ContentPack.json /opt/graylog/contentpacks/
 
 ADD https://github.com/sivasamyk/graylog2-plugin-input-httpmonitor/releases/download/v1.0.3/graylog2-plugin-input-httpmonitor-1.0.3.jar opt/graylog/plugin/
 
-RUN mkdir  /opt/graylog/sv/index
+RUN mkdir -p /opt/graylog/sv/index
 COPY ./result_template.sh /opt/graylog/sv/index/run
 RUN chmod +x /opt/graylog/sv/index/run
 
