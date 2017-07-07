@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Frestcomm-graylog-docker.svg?type=shield)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Frestcomm-graylog-docker?ref=badge_shield)
+
 ﻿# Graylog docker image for monitoring Restcomm.
 
 Graylog in principle is an Open Source Log Management system. 
@@ -69,3 +71,7 @@ they will be created automatically.
  
 ```docker run --rm -t --ulimit nofile=1024:64000 -p 443:443 -p 80:9000 -p 12201:12201 -p 9200:9200 -p 12900:12900 -p 12201:12201/udp -p 5555:5555 -p 6666:6666 -p 7777:7777 -e GRAYLOG_NODE_ID=AddGraylogId  -e GRAYLOG_ENFORCE_SSL="TRUE" -e SECURESSL="TRUE" -e GRAYLOG_SERVER_SECRET=AddGraylogSecret -e GRAYLOG_USERNAME=USER_NAME -e GRAYLOG_TIMEZONE=Europe/Berlin -e GRAYLOG_RETENTION="--size=3 --indices=10" -e ES_MEMORY=4g -e GRAYLOG_PASSWORD=PassWord -e GRAYLOG_SMTP_SERVER="smtp-email-server --no-tls --no-ssl --port=587 --user=UserForEmailProvider --password=PassWordForEmail --from-email=email@domain.com" -v /graylog/data:/var/opt/graylog/data -v /graylog/logs:/var/log/graylog    --name=restcomm-graylog restcomm/restcomm-graylog:latest```
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Frestcomm-graylog-docker.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2FRestComm%2Frestcomm-graylog-docker?ref=badge_large)
